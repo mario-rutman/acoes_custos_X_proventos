@@ -32,7 +32,12 @@ custos_X_proventos <- read_excel("data-raw/csv_excel/ações_ custo X proventos.
     # criando a coluna ano_mes
     mutate(ano_mes = format(data, "%y-%m")) %>%
     # criando a coluna ano
-    mutate(ano = format(data, "%Y"))
+    mutate(ano = format(data, "%Y")) %>%
+    # criando as colunas dos acumulados e do percentual dos proventos sobre os custos.
+    mutate(
+        custos_acumul = cumsum(custo_compra),
+        proventos_acumul = cumsum(proventos),
+        dividend_yield_percentual = round((proventos_acumul * 100 / custos_acumul), 2))
 
 saveRDS(custos_X_proventos, "data-raw/rds/custos_X_proventos.rds")
 
@@ -50,11 +55,11 @@ saveRDS(proventos_por_mes, "data-raw/rds/proventos_por_mes.rds")
 
 ggplot(proventos_por_mes, aes(x = ano_mes, y = proventos_no_mes)) +
     geom_point(size=3, alpha=1) +
-    geom_hline(yintercept = 1000, color = "green3", size=2.5, alpha=1) +
-    #geom_hline(yintercept = 2000, color = "green3", size=2.5, alpha=1) +
-    #geom_hline(yintercept = 3000, color = "green3", size=2.5, alpha=1) +
-    #geom_hline(yintercept = 4000, color = "green3", size=2.5, alpha=1) +
-    #geom_hline(yintercept = 5000, color = "green3", size=2.5, alpha=1) +
+    geom_hline(yintercept = 1000, color = "green3", linewidth=2.5, alpha=1) +
+    #geom_hline(yintercept = 2000, color = "green3", linewidth=2.5, alpha=1) +
+    #geom_hline(yintercept = 3000, color = "green3", linewidth=2.5, alpha=1) +
+    #geom_hline(yintercept = 4000, color = "green3", linewidth=2.5, alpha=1) +
+    #geom_hline(yintercept = 5000, color = "green3", linewidth=2.5, alpha=1) +
     labs(x = "ano-mes", y = "proventos") +
     theme_bw()
 
