@@ -2,7 +2,7 @@
 
 # 1. Carregando os pacotes. -----------------------------------------------
 # Lista de pacotes necessários
-pacotes_necessarios <- c("dplyr", "ggplot2", "tidyr", "readxl", "lubridate")
+pacotes_necessarios <- c("dplyr", "ggplot2", "tidyr", "readxl", "lubridate", "glue", "stringr")
 
 # Função para instalar pacotes que ainda não estão instalados
 instalar_pacotes <- function(pacotes) {
@@ -46,7 +46,8 @@ saveRDS(custos_X_proventos, "data-raw/rds/custos_X_proventos.rds")
 
 proventos_por_mes <- custos_X_proventos %>%
     group_by(ano_mes) %>%
-    summarize(proventos_no_mes = sum(proventos, na.rm= TRUE))
+    summarize(proventos_no_mes = sum(proventos, na.rm= TRUE))%>%
+    mutate(ano = paste0("20", str_sub(ano_mes, 1, 2)))
 
 saveRDS(proventos_por_mes, "data-raw/rds/proventos_por_mes.rds")
 
@@ -63,7 +64,20 @@ ggplot(proventos_por_mes, aes(x = ano_mes, y = proventos_no_mes)) +
     labs(x = "ano-mes", y = "proventos") +
     theme_bw()
 
-# 5. Fazendo a média mensal nos últimos 12 meses. -------------------------
+
+
+# 5. Fazendo boxplot dos proventos de cada ano. --------
+
+ggplot(proventos_por_mes, aes(x = ano, y = proventos_no_mes)) +
+    geom_boxplot(color = "black", size = 1) +
+    geom_jitter(width = 0.2, size=3, color = "#E95420", alpha=0.6) + # Adiciona pontos individuais
+    labs(title = "Distribuição dos Proventos por Ano",
+         x = "Ano",
+         y = "Proventos no Mês (R$)") +
+    theme_bw()
+
+
+# 6. Fazendo a média mensal nos últimos 12 meses. -------------------------
 
 calcular_media_proventos_ultimos_12_meses <- function(df) {
     # Verifica se o dataframe tem pelo menos 12 linhas
