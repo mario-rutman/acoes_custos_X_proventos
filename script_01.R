@@ -51,7 +51,8 @@ saveRDS(custos_X_proventos, "data-raw/rds/custos_X_proventos.rds")
 
 proventos_por_mes <- custos_X_proventos %>%
   group_by(ano_mes) %>%
-  summarize(proventos_no_mes = sum(proventos, na.rm = TRUE)) %>%
+  summarize(custos_no_mes = sum(custo_compra, na.rm = TRUE),
+            proventos_no_mes = sum(proventos, na.rm = TRUE)) %>%
   mutate(ano = paste0("20", str_sub(ano_mes, 1, 2)))
 
 saveRDS(proventos_por_mes, "data-raw/rds/proventos_por_mes.rds")
@@ -84,7 +85,31 @@ ggplot(proventos_por_mes, aes(x = ano, y = proventos_no_mes)) +
   theme_bw()
 
 
-# 6. Fazendo a média mensal nos últimos 12 meses. -------------------------
+# 6. Fazendo a média mensal nos últimos 12 mesesde custos e proventos. -------------------------
+
+calcular_media_custos_ultimos_12_meses <- function(df) {
+    # Verifica se o dataframe tem pelo menos 12 linhas
+    if (nrow(df) < 12) {
+        stop("O dataframe precisa ter pelo menos 12 linhas para calcular a média dos últimos 12 meses.")
+    }
+    
+    # Seleciona os valores da coluna 'custos_no_mes' dos últimos 12 meses
+    ultimos_12_meses <- tail(df$custos_no_mes, 12)
+    
+    # Calcula a média dos valores selecionados
+    media_ultimos_12_meses <- mean(ultimos_12_meses) %>% round(0)
+    
+    # Formata a média como moeda brasileira
+    media_formatada <- glue("R$ {format(media_ultimos_12_meses, decimal.mark = ',', big.mark = '.')}.")
+    
+    # Retorna a frase com a média formatada.
+    return(paste("O gasto médio na compra de ações nos últimos 12 meses foi de", media_formatada))
+}
+
+# Exemplo.
+calcular_media_custos_ultimos_12_meses(proventos_por_mes)
+
+
 
 calcular_media_proventos_ultimos_12_meses <- function(df) {
   # Verifica se o dataframe tem pelo menos 12 linhas
@@ -101,8 +126,7 @@ calcular_media_proventos_ultimos_12_meses <- function(df) {
   # Formata a média como moeda brasileira
   media_formatada <- glue("R$ {format(media_ultimos_12_meses, decimal.mark = ',', big.mark = '.')}.")
   
-
-  # Retorna a frase com a média formatada
+  # Retorna a frase com a média formatada.
   return(paste("O provento médio nos últimos 12 meses foi de", media_formatada))
 }
 
