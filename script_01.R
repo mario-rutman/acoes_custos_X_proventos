@@ -49,18 +49,18 @@ saveRDS(custos_X_proventos, "data-raw/rds/custos_X_proventos.rds")
 
 # 3. Fazendo o proventos por mês e salvando em rds.  ----------------------------------------
 
-proventos_por_mes <- custos_X_proventos %>%
+cust_prov_mes <- custos_X_proventos %>%
   group_by(ano_mes) %>%
   summarize(custos_no_mes = sum(custo_compra, na.rm = TRUE),
             proventos_no_mes = sum(proventos, na.rm = TRUE)) %>%
   mutate(ano = paste0("20", str_sub(ano_mes, 1, 2)))
 
-saveRDS(proventos_por_mes, "data-raw/rds/proventos_por_mes.rds")
+saveRDS(cust_prov_mes, "data-raw/rds/cust_prov_mes.rds")
 
 
 # 4. Fazendo o gráfico dos proventos por mês. -----------------------------
 
-ggplot(proventos_por_mes, aes(x = ano_mes, y = proventos_no_mes)) +
+ggplot(cust_prov_mes, aes(x = ano_mes, y = proventos_no_mes)) +
   geom_point(size = 3, alpha = 1) +
   geom_hline(yintercept = 1000, color = "green3", linewidth = 2.5, alpha = 1) +
   # geom_hline(yintercept = 2000, color = "green3", linewidth=2.5, alpha=1) +
@@ -74,9 +74,9 @@ ggplot(proventos_por_mes, aes(x = ano_mes, y = proventos_no_mes)) +
 
 # 5. Fazendo boxplot dos proventos de cada ano. --------
 
-ggplot(proventos_por_mes, aes(x = ano, y = proventos_no_mes)) +
+ggplot(cust_prov_mes, aes(x = ano, y = proventos_no_mes)) +
   geom_boxplot(color = "black", size = 1) +
-  geom_jitter(width = 0.2, size = 3, color = "#E95420", alpha = 0.6) + # Adiciona pontos individuais
+  geom_jitter(width = 0.2, size = 3, color = "#E95420", alpha = 1) + # Adiciona pontos individuais
   labs(
     title = "Distribuição dos Proventos por Ano",
     x = "Ano",
@@ -107,8 +107,7 @@ calcular_media_custos_ultimos_12_meses <- function(df) {
 }
 
 # Exemplo.
-calcular_media_custos_ultimos_12_meses(proventos_por_mes)
-
+calcular_media_custos_ultimos_12_meses(cust_prov_mes)
 
 
 calcular_media_proventos_ultimos_12_meses <- function(df) {
@@ -131,4 +130,4 @@ calcular_media_proventos_ultimos_12_meses <- function(df) {
 }
 
 # Exemplo.
-calcular_media_proventos_ultimos_12_meses(proventos_por_mes)
+calcular_media_proventos_ultimos_12_meses(cust_prov_mes)
