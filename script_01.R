@@ -62,9 +62,9 @@ saveRDS(cust_prov_mes, "data-raw/rds/cust_prov_mes.rds")
 
 ggplot(cust_prov_mes, aes(x = ano_mes, y = proventos_no_mes)) +
   geom_point(size = 3, alpha = 1) +
-  geom_hline(yintercept = 1000, color = "green3", linewidth = 2.5, alpha = 1) +
-  # geom_hline(yintercept = 2000, color = "green3", linewidth=2.5, alpha=1) +
-  # geom_hline(yintercept = 3000, color = "green3", linewidth=2.5, alpha=1) +
+  geom_hline(yintercept = 1000, color = "green3", linewidth = 2.0, alpha = 1) +
+  geom_hline(yintercept = 2000, color = "green3", linewidth=2.0, alpha=1) +
+  geom_hline(yintercept = 3000, color = "green3", linewidth=2.0, alpha=1) +
   # geom_hline(yintercept = 4000, color = "green3", linewidth=2.5, alpha=1) +
   # geom_hline(yintercept = 5000, color = "green3", linewidth=2.5, alpha=1) +
   labs(x = "ano-mes", y = "proventos") +
@@ -76,7 +76,7 @@ ggplot(cust_prov_mes, aes(x = ano_mes, y = proventos_no_mes)) +
 
 ggplot(cust_prov_mes, aes(x = ano, y = proventos_no_mes)) +
   geom_boxplot(color = "black", size = 1) +
-  geom_jitter(width = 0.2, size = 3, color = "#E95420", alpha = 1) + # Adiciona pontos individuais
+  geom_jitter(width = 0.2, size = 4, color = "black", fill = "#E95420", shape = 21, alpha = 1) + # Adiciona pontos individuais
   labs(
     title = "Distribuição dos Proventos por Ano",
     x = "Ano",
